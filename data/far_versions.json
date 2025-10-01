@@ -1,0 +1,11 @@
+{
+  "versions": [
+    {
+      "fac_number": "2025-05",
+      "effective_date": "08/07/2025",
+      "file_path": "data/far_20251001_010248.txt",
+      "scraped_at": "2025-10-01T01:01:22.636073"
+    }
+  ],
+  "latest": "data/far_20251001_010248.txt"
+}
