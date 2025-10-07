@@ -7,7 +7,6 @@ import os
 import json
 import re
 from typing import List, Dict, Optional, Tuple
-import openai
 from datetime import datetime
 from config import Config
 
@@ -16,12 +15,14 @@ class FARChatbot:
         self.data_dir = data_dir
         self.chat_history = []
         
-        # Initialize OpenAI
+        # Initialize OpenAI client
         if openai_api_key:
-            openai.api_key = openai_api_key
-        elif Config.OPENAI_API_KEY:
-            openai.api_key = Config.OPENAI_API_KEY
+            from openai import OpenAI
+            self.client = OpenAI(api_key=openai_api_key)
         else:
+            self.client = Config.get_openai_client()
+        
+        if not self.client:
             print("⚠️  No OpenAI API key provided. Chatbot will work in limited mode.")
             self.openai_available = False
             return
@@ -152,7 +153,7 @@ class FARChatbot:
             
             Please provide a helpful answer based on the FAR content above."""
             
-            response = openai.ChatCompletion.create(
+            response = self.client.chat.completions.create(
                 model=self.model,
                 messages=[
                     {"role": "system", "content": system_prompt},

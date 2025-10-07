@@ -5,7 +5,19 @@
       "effective_date": "08/07/2025",
       "file_path": "data/far_20251001_010248.txt",
       "scraped_at": "2025-10-01T01:01:22.636073"
+    },
+    {
+      "fac_number": "2025-06",
+      "effective_date": "10/01/2025",
+      "file_path": "data/far_20251003_120818.txt",
+      "scraped_at": "2025-10-03T12:06:46.379194"
+    },
+    {
+      "fac_number": "2025-06",
+      "effective_date": "10/01/2025",
+      "file_path": "data/far_20251003_123137.txt",
+      "scraped_at": "2025-10-03T12:30:32.116093"
     }
   ],
-  "latest": "data/far_20251001_010248.txt"
+  "latest": "data/far_20251003_123137.txt"
 }

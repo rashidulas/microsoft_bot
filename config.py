@@ -3,14 +3,26 @@ Configuration file for FAR Bot
 """
 import os
 from typing import Optional
+from dotenv import load_dotenv
+from openai import OpenAI
+
+# Load environment variables from .env file
+load_dotenv()
 
 class Config:
     """Configuration settings for FAR Bot"""
     
     # OpenAI API Configuration
     OPENAI_API_KEY: Optional[str] = os.getenv("OPENAI_API_KEY")
-    OPENAI_MODEL: str = os.getenv("OPENAI_MODEL", "gpt-3.5-turbo")
+    OPENAI_MODEL: str = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
     OPENAI_TEMPERATURE: float = float(os.getenv("OPENAI_TEMPERATURE", "0.3"))
+    
+    @classmethod
+    def get_openai_client(cls) -> Optional[OpenAI]:
+        """Get OpenAI client instance"""
+        if not cls.OPENAI_API_KEY:
+            return None
+        return OpenAI(api_key=cls.OPENAI_API_KEY)
     
     # Data directory
     DATA_DIR: str = os.getenv("DATA_DIR", "data")

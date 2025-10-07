@@ -4,7 +4,6 @@ import difflib
 import re
 from datetime import datetime
 from typing import Dict, List, Optional, Tuple
-import openai
 from dataclasses import dataclass
 
 @dataclass
@@ -22,8 +21,11 @@ class FARChangeAnalyzer:
         self.openai_client = None
         
         if openai_api_key:
-            openai.api_key = openai_api_key
-            self.openai_client = openai
+            from openai import OpenAI
+            self.openai_client = OpenAI(api_key=openai_api_key)
+        else:
+            from config import Config
+            self.openai_client = Config.get_openai_client()
         
     def load_far_data(self, file_path: str) -> Optional[Dict]:
         """Load FAR data from JSON file"""
@@ -149,8 +151,8 @@ class FARChangeAnalyzer:
             3. Any action items or considerations for businesses
             """
             
-            response = self.openai_client.ChatCompletion.create(
-                model="gpt-3.5-turbo",
+            response = self.openai_client.chat.completions.create(
+                model="gpt-4o-mini",
                 messages=[
                     {"role": "system", "content": "You are an expert in government contracting and the Federal Acquisition Regulation. Explain changes in simple, business-friendly language."},
                     {"role": "user", "content": prompt}
