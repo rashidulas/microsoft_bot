@@ -1,145 +1,136 @@
-# FAR Bot - Federal Acquisition Regulation Change Tracker
+# 🤖 FAR Bot - Federal Acquisition Regulation AI Assistant
 
-A comprehensive system to scrape, track, and analyze changes to the Federal Acquisition Regulation (FAR) from [acquisition.gov](https://www.acquisition.gov/browse/index/far).
+A comprehensive AI-powered chatbot that helps users understand the Federal Acquisition Regulation (FAR) with automated scraping, database integration, and a modern web interface.
 
-## Features
+## ✨ Features
 
-- **Automated Scraping**: Scrapes all 53 FAR parts from the official government website
-- **Version Tracking**: Tracks FAR versions by FAC number and effective date
-- **Change Detection**: Automatically detects when new versions are available
-- **Change Analysis**: Compares versions and identifies what changed
-- **Plain English Explanations**: Uses AI to explain changes in business-friendly language
-- **Historical Tracking**: Maintains a complete history of all FAR versions
+- **🤖 AI-Powered Chat**: OpenAI GPT integration for intelligent FAR responses
+- **🗄️ Database Integration**: SQLite database for persistent data storage
+- **⏰ Automated Scraping**: Daily automated scraping with APScheduler
+- **🌐 Modern Web UI**: Beautiful, responsive web interface
+- **📊 Admin Panel**: Comprehensive monitoring and management
+- **📱 Mobile Friendly**: Responsive design works on all devices
 
-## Quick Start
+## 🚀 Quick Start
 
 ### 1. Setup Environment
 ```bash
-# Create and activate virtual environment
-python3 -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+# Activate virtual environment
+source venv/bin/activate
 
-# Install dependencies
+# Install dependencies (if needed)
 pip install -r requirements.txt
 ```
 
-### 2. Setup AI Chatbot
+### 2. Configure API Key
+Edit the `.env` file and add your OpenAI API key:
 ```bash
-# Run the setup script (will prompt for OpenAI API key)
-python setup_chatbot.py
-
-# Or manually set your OpenAI API key
-export OPENAI_API_KEY=your_openai_api_key_here
+nano .env
+# Change: OPENAI_API_KEY=your_actual_api_key_here
 ```
 
-### 3. Basic Usage
-
-**Scrape the latest FAR:**
+### 3. Start the Application
 ```bash
-python far_bot.py scrape
+# Start the complete application
+python start.py
+
+# Or use the startup script
+./run.sh
 ```
 
-**Start AI Chatbot (Command Line):**
-```bash
-python simple_chatbot.py
+### 4. Access the Interface
+- **Chat Interface**: http://localhost:5001
+- **Admin Panel**: http://localhost:5001/admin
+
+## 📁 Project Structure
+
+```
+microsoft_bot/
+├── main.py                  # Main application entry point
+├── start.py                 # Simple startup script
+├── app.py                   # Flask web application
+├── database.py              # Database models and operations
+├── scheduler.py             # Automated scheduling
+├── scrape_far.py            # FAR web scraping
+├── config.py                # Configuration management
+├── run.sh                   # Startup script
+├── templates/
+│   ├── chatbot.html         # Chat interface
+│   └── admin.html           # Admin panel
+├── data/
+│   ├── far_latest.json      # Latest FAR data
+│   ├── far_latest.txt       # Latest FAR text
+│   └── far_versions.json    # Version tracking
+├── far_bot.db              # SQLite database
+├── requirements.txt         # Python dependencies
+├── .env                     # Environment variables
+└── README.md               # This file
 ```
 
-**Start AI Chatbot (Web Interface):**
-```bash
-python web_chatbot.py
-# Then open: http://localhost:5000
+## 🗄️ Database
+
+The application uses SQLite with three main tables:
+- **far_data**: Stores scraped FAR content and versions
+- **chat_history**: Stores all chat conversations
+- **scraping_logs**: Logs all scraping operations
+
+## ⚙️ Configuration
+
+### Environment Variables (.env file)
+```env
+OPENAI_API_KEY=your_openai_api_key_here
+FLASK_SECRET_KEY=your-secret-key-change-this
+FLASK_DEBUG=False
+PORT=5001
 ```
 
-**Check system status:**
-```bash
-python far_bot.py status
-```
+### Automated Scheduling
+- **Daily Scraping**: 2:00 AM every day
+- **Weekly Cleanup**: 3:00 AM every Sunday
+- **Smart Detection**: Only scrapes when FAR version changes
 
-**Run full cycle (scrape + analyze changes):**
-```bash
-python far_bot.py run
-```
+## 📊 Admin Panel Features
 
-**Analyze changes between versions:**
-```bash
-python far_bot.py analyze
-```
+Access the admin panel at `/admin` to:
+- Monitor system statistics
+- Trigger manual scraping
+- View scraping operation logs
+- Manage data cleanup
+- Force scraping operations
 
-## AI Chatbot Features
+## 🔧 Troubleshooting
 
-The AI chatbot can answer questions about the FAR in plain English:
+### Common Issues
+1. **Port in use**: Change `PORT=5001` in `.env`
+2. **API key errors**: Verify your OpenAI API key in `.env`
+3. **Database issues**: Delete `far_bot.db` and restart
 
-**Example Questions:**
+### Logs
+- Application logs: `far_bot.log`
+- Console output: Real-time status
+- Admin panel: Scraping operation logs
+
+## 🚀 Usage
+
+### Chat Interface
+Ask questions about the FAR like:
 - "What are the small business requirements?"
 - "How do I submit a bid for a government contract?"
 - "What are the security requirements for contractors?"
 - "Tell me about contract termination procedures"
-- "What is the simplified acquisition threshold?"
-- "How do I become a government contractor?"
 
-**Two Interfaces Available:**
-1. **Command Line**: `python simple_chatbot.py`
-2. **Web Interface**: `python web_chatbot.py` (then open http://localhost:5000)
+### API Endpoints
+- `GET /api/status` - System status
+- `POST /api/chat` - Send chat message
+- `GET /api/history` - Chat history
+- `POST /api/clear` - Clear chat history
+- `GET /api/admin/stats` - System statistics
+- `POST /api/scrape` - Manual scraping
 
-### Advanced Usage with AI Explanations
+## 📄 License
 
-To get AI-powered plain English explanations of changes, set your OpenAI API key:
+This project is licensed under the MIT License.
 
-```bash
-python far_bot.py run --openai-key YOUR_OPENAI_API_KEY
-```
+## ⚠️ Disclaimer
 
-## Files Created
-
-- `data/far_latest.txt` - Latest FAR in text format
-- `data/far_latest.json` - Latest FAR in structured JSON format
-- `data/far_versions.json` - Version tracking metadata
-- `data/far_changes_YYYYMMDD_HHMMSS.md` - Change analysis reports
-
-## How It Works
-
-1. **Version Detection**: Checks the acquisition.gov website for the current FAC number and effective date
-2. **Smart Scraping**: Only scrapes if a new version is detected
-3. **Content Extraction**: Extracts all FAR parts and their content
-4. **Change Analysis**: Compares new version with previous version
-5. **Report Generation**: Creates detailed change reports with AI explanations
-
-## Example Output
-
-The system successfully scraped **53 FAR parts** and created:
-- **6.5MB** of FAR text data
-- **13MB** of structured JSON data
-- Version tracking for **FAC 2025-05** (Effective: 08/07/2025)
-
-## Automation
-
-You can set up automated monitoring by running the bot periodically:
-
-```bash
-# Add to crontab for daily checks
-0 9 * * * cd /path/to/far_bot && python far_bot.py run
-```
-
-## API Integration
-
-The system can be integrated with other applications through the Python classes:
-
-```python
-from far_bot import FARBot
-
-bot = FARBot()
-latest_file = bot.scrape_latest()
-change_report = bot.analyze_changes()
-```
-
-## Requirements
-
-- Python 3.7+
-- requests
-- beautifulsoup4
-- openai (optional, for AI explanations)
-- faiss-cpu (for future similarity search features)
-
-## Legal Notice
-
-This tool scrapes publicly available government data from acquisition.gov. Always verify important regulatory information with official sources.
+This tool is for informational purposes only. Always consult official sources and legal professionals for authoritative FAR guidance.
