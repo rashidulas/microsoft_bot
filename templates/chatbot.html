@@ -1,436 +1,390 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FAR AI Chatbot</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .chat-container {
-            width: 90%;
-            max-width: 800px;
-            height: 80vh;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-        
-        .chat-header {
-            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
-        
-        .chat-header h1 {
-            font-size: 24px;
-            margin-bottom: 5px;
-        }
-        
-        .chat-header p {
-            opacity: 0.8;
-            font-size: 14px;
-        }
-        
-        .chat-messages {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-            background: #f8f9fa;
-        }
-        
-        .message {
-            margin-bottom: 20px;
-            display: flex;
-            align-items: flex-start;
-        }
-        
-        .message.user {
-            justify-content: flex-end;
-        }
-        
-        .message-content {
-            max-width: 70%;
-            padding: 15px 20px;
-            border-radius: 20px;
-            word-wrap: break-word;
-        }
-        
-        .message.user .message-content {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-bottom-right-radius: 5px;
-        }
-        
-        .message.bot .message-content {
-            background: white;
-            color: #333;
-            border: 1px solid #e1e5e9;
-            border-bottom-left-radius: 5px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        
-        .message-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            margin: 0 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            color: white;
-        }
-        
-        .message.user .message-avatar {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-        
-        .message.bot .message-avatar {
-            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-        }
-        
-        .chat-input-container {
-            padding: 20px;
-            background: white;
-            border-top: 1px solid #e1e5e9;
-        }
-        
-        .chat-input-form {
-            display: flex;
-            gap: 10px;
-        }
-        
-        .chat-input {
-            flex: 1;
-            padding: 15px 20px;
-            border: 2px solid #e1e5e9;
-            border-radius: 25px;
-            font-size: 16px;
-            outline: none;
-            transition: border-color 0.3s;
-        }
-        
-        .chat-input:focus {
-            border-color: #667eea;
-        }
-        
-        .send-button {
-            padding: 15px 25px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-            transition: transform 0.2s;
-        }
-        
-        .send-button:hover {
-            transform: translateY(-2px);
-        }
-        
-        .send-button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-        
-        .loading {
-            display: none;
-            text-align: center;
-            padding: 20px;
-            color: #666;
-        }
-        
-        .loading.show {
-            display: block;
-        }
-        
-        .error {
-            background: #ffebee;
-            color: #c62828;
-            padding: 15px;
-            border-radius: 10px;
-            margin: 10px 0;
-            border-left: 4px solid #c62828;
-        }
-        
-        .status-indicator {
-            display: inline-block;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            margin-right: 8px;
-        }
-        
-        .status-online {
-            background: #4caf50;
-        }
-        
-        .status-offline {
-            background: #f44336;
-        }
-        
-        .clear-button {
-            background: #f44336;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 15px;
-            cursor: pointer;
-            font-size: 12px;
-            margin-left: 10px;
-        }
-        
-        .clear-button:hover {
-            background: #d32f2f;
-        }
-        
-        @media (max-width: 600px) {
-            .chat-container {
-                width: 95%;
-                height: 90vh;
-            }
-            
-            .message-content {
-                max-width: 85%;
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FAR AI Chat Assistant</title>
+  <style>
+    :root {
+      --primary: #1e3a8a;
+      --secondary: #334155;
+      --accent: #2563eb;
+      --bg-light: #f8fafc;
+      --bg-white: #ffffff;
+      --text-dark: #1e293b;
+      --text-light: #64748b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Inter", "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, #f3f4f6, #e2e8f0);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .chat-container {
+      width: 90%;
+      max-width: 850px;
+      height: 85vh;
+      background: var(--bg-white);
+      border-radius: 18px;
+      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .chat-header {
+      background: var(--primary);
+      color: white;
+      padding: 20px 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .chat-header h1 {
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+    }
+
+    .chat-header p {
+      font-size: 14px;
+      opacity: 0.85;
+    }
+
+    .status-bar {
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .status-indicator {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .status-online {
+      background: #22c55e;
+    }
+
+    .status-offline {
+      background: #ef4444;
+    }
+
+    .chat-messages {
+      flex: 1;
+      padding: 25px;
+      overflow-y: auto;
+      background: var(--bg-light);
+      scroll-behavior: smooth;
+    }
+
+    .message {
+      display: flex;
+      margin-bottom: 18px;
+      animation: fadeIn 0.2s ease-in;
+    }
+
+    .message.bot {
+      justify-content: flex-start;
+    }
+
+    .message.user {
+      justify-content: flex-end;
+    }
+
+    .message-content {
+      max-width: 75%;
+      padding: 14px 18px;
+      border-radius: 18px;
+      line-height: 1.5;
+      font-size: 15px;
+      white-space: pre-wrap;
+      transition: transform 0.2s ease-in;
+    }
+
+    .message.bot .message-content {
+      background: var(--bg-white);
+      color: var(--text-dark);
+      border: 1px solid #e5e7eb;
+    }
+
+    .message.user .message-content {
+      background: var(--accent);
+      color: white;
+    }
+
+    .message-content:hover {
+      transform: scale(1.01);
+    }
+
+    .chat-input-container {
+      background: var(--bg-white);
+      border-top: 1px solid #e2e8f0;
+      padding: 15px 20px;
+    }
+
+    .chat-input-form {
+      display: flex;
+      gap: 10px;
+    }
+
+    .chat-input {
+      flex: 1;
+      padding: 14px 18px;
+      font-size: 15px;
+      border-radius: 25px;
+      border: 1.8px solid #cbd5e1;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .chat-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+    }
+
+    .send-button {
+      padding: 14px 26px;
+      background: var(--accent);
+      border: none;
+      border-radius: 25px;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.25s ease, transform 0.2s;
+    }
+
+    .send-button:hover {
+      background: #1d4ed8;
+      transform: translateY(-1px);
+    }
+
+    .send-button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .loading {
+      display: none;
+      text-align: center;
+      color: var(--text-light);
+      font-size: 14px;
+      padding: 10px;
+    }
+
+    .loading.show {
+      display: block;
+    }
+
+    .clear-button {
+      margin-left: auto;
+      background: #e11d48;
+      color: white;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 15px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .clear-button:hover {
+      background: #be123c;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(5px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .chat-container {
+        height: 90vh;
+      }
+      .message-content {
+        max-width: 85%;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="chat-container">
-        <div class="chat-header">
-            <h1>🤖 FAR AI Chatbot</h1>
-            <p>Ask questions about the Federal Acquisition Regulation</p>
-            <div style="margin-top: 10px;">
-                <span class="status-indicator status-online" id="statusIndicator"></span>
-                <span id="statusText">AI Ready</span>
-                <button class="clear-button" onclick="clearHistory()">Clear History</button>
-            </div>
-        </div>
-        
-        <div class="chat-messages" id="chatMessages">
-            <div class="message bot">
-                <div class="message-avatar">🤖</div>
-                <div class="message-content">
-                    Hello! I'm your FAR AI assistant. I can help you understand the Federal Acquisition Regulation. 
-                    Ask me questions like:
-                    <br><br>
-                    • "What are the small business requirements?"
-                    <br>
-                    • "How do I submit a bid?"
-                    <br>
-                    • "What are the security requirements?"
-                    <br>
-                    • "Tell me about contract termination procedures"
-                </div>
-            </div>
-        </div>
-        
-        <div class="loading" id="loading">
-            🤔 Thinking...
-        </div>
-        
-        <div class="chat-input-container">
-            <form class="chat-input-form" onsubmit="sendMessage(event)">
-                <input 
-                    type="text" 
-                    class="chat-input" 
-                    id="messageInput" 
-                    placeholder="Ask a question about the FAR..."
-                    autocomplete="off"
-                >
-                <button type="submit" class="send-button" id="sendButton">
-                    Send
-                </button>
-            </form>
-        </div>
+  <div class="chat-container">
+    <div class="chat-header">
+      <h1>FAR AI Chat Assistant</h1>
+      <p>Ask any question related to the Federal Acquisition Regulation</p>
+      <div class="status-bar">
+        <span class="status-indicator status-online" id="statusIndicator"></span>
+        <span id="statusText">System Online</span>
+        <button class="clear-button" onclick="clearHistory()">Clear History</button>
+      </div>
     </div>
 
-    <script>
-        let isLoading = false;
-        
-        // Check status on load
-        checkStatus();
-        
-        async function checkStatus() {
-            try {
-                const response = await fetch('/api/status');
-                const status = await response.json();
-                
-                const indicator = document.getElementById('statusIndicator');
-                const statusText = document.getElementById('statusText');
-                
-                if (status.ai_available && status.far_data_available) {
-                    indicator.className = 'status-indicator status-online';
-                    statusText.textContent = 'AI Ready';
-                } else {
-                    indicator.className = 'status-indicator status-offline';
-                    statusText.textContent = 'AI Not Available';
-                }
-            } catch (error) {
-                console.error('Status check failed:', error);
-            }
+    <div class="chat-messages" id="chatMessages">
+      <div class="message bot">
+        <div class="message-content">
+          Welcome to the FAR AI Assistant. I can help you understand and interpret
+          the Federal Acquisition Regulation (FAR). You can ask questions such as:
+          <br><br>
+          • What are the small business requirements?<br>
+          • How can I submit a federal bid?<br>
+          • What are the security compliance standards?<br>
+          • Explain contract termination procedures.
+        </div>
+      </div>
+    </div>
+
+    <div class="loading" id="loading">Processing your question...</div>
+
+    <div class="chat-input-container">
+      <form class="chat-input-form" onsubmit="sendMessage(event)">
+        <input
+          type="text"
+          class="chat-input"
+          id="messageInput"
+          placeholder="Type your question here..."
+          autocomplete="off"
+        />
+        <button type="submit" class="send-button" id="sendButton">Send</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    let isLoading = false;
+    checkStatus();
+    loadHistory();
+
+    async function checkStatus() {
+      try {
+        const response = await fetch("/api/status");
+        const status = await response.json();
+
+        const indicator = document.getElementById("statusIndicator");
+        const statusText = document.getElementById("statusText");
+
+        if (status.ai_available && status.far_data_available) {
+          indicator.className = "status-indicator status-online";
+          statusText.textContent = "System Online";
+        } else {
+          indicator.className = "status-indicator status-offline";
+          statusText.textContent = "AI Not Available";
         }
-        
-        async function sendMessage(event) {
-            event.preventDefault();
-            
-            if (isLoading) return;
-            
-            const input = document.getElementById('messageInput');
-            const message = input.value.trim();
-            
-            if (!message) return;
-            
-            // Add user message to chat
-            addMessage(message, 'user');
-            input.value = '';
-            
-            // Show loading
-            setLoading(true);
-            
-            try {
-                const response = await fetch('/api/chat', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ question: message })
-                });
-                
-                const data = await response.json();
-                
-                if (response.ok) {
-                    addMessage(data.answer, 'bot');
-                } else {
-                    addMessage(`Error: ${data.error}`, 'bot');
-                }
-            } catch (error) {
-                addMessage(`Error: ${error.message}`, 'bot');
-            } finally {
-                setLoading(false);
-            }
+      } catch {
+        console.warn("Status check failed.");
+      }
+    }
+
+    async function sendMessage(event) {
+      event.preventDefault();
+      if (isLoading) return;
+
+      const input = document.getElementById("messageInput");
+      const message = input.value.trim();
+      if (!message) return;
+
+      addMessage(message, "user");
+      input.value = "";
+      setLoading(true);
+
+      try {
+        const response = await fetch("/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ question: message }),
+        });
+
+        const data = await response.json();
+        if (response.ok) addMessage(data.answer, "bot");
+        else addMessage("Error: " + data.error, "bot");
+      } catch (err) {
+        addMessage("Error: " + err.message, "bot");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    function addMessage(content, sender) {
+      const container = document.getElementById("chatMessages");
+      const msg = document.createElement("div");
+      msg.className = `message ${sender}`;
+      const contentDiv = document.createElement("div");
+      contentDiv.className = "message-content";
+      contentDiv.innerHTML = content.replace(/\n/g, "<br>");
+      msg.appendChild(contentDiv);
+      container.appendChild(msg);
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function setLoading(val) {
+      isLoading = val;
+      const load = document.getElementById("loading");
+      const sendBtn = document.getElementById("sendButton");
+      if (val) {
+        load.classList.add("show");
+        sendBtn.disabled = true;
+        sendBtn.textContent = "Sending...";
+      } else {
+        load.classList.remove("show");
+        sendBtn.disabled = false;
+        sendBtn.textContent = "Send";
+      }
+    }
+
+    async function clearHistory() {
+      if (!confirm("Clear chat history?")) return;
+      await fetch("/api/clear", { method: "POST" });
+      const container = document.getElementById("chatMessages");
+      container.innerHTML = `
+        <div class="message bot">
+          <div class="message-content">
+            Chat history cleared. How can I assist you with the FAR today?
+          </div>
+        </div>
+      `;
+    }
+
+    async function loadHistory() {
+      try {
+        const response = await fetch("/api/history");
+        const history = await response.json();
+        const container = document.getElementById("chatMessages");
+        container.innerHTML = "";
+        history.forEach((h) => {
+          addMessage(h.question, "user");
+          addMessage(h.answer, "bot");
+        });
+        if (history.length === 0) {
+          addMessage(
+            "Welcome to the FAR AI Assistant. How can I assist you today?",
+            "bot"
+          );
         }
-        
-        function addMessage(content, sender) {
-            const messagesContainer = document.getElementById('chatMessages');
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${sender}`;
-            
-            const avatar = document.createElement('div');
-            avatar.className = 'message-avatar';
-            avatar.textContent = sender === 'user' ? '👤' : '🤖';
-            
-            const messageContent = document.createElement('div');
-            messageContent.className = 'message-content';
-            messageContent.innerHTML = content.replace(/\n/g, '<br>');
-            
-            messageDiv.appendChild(avatar);
-            messageDiv.appendChild(messageContent);
-            messagesContainer.appendChild(messageDiv);
-            
-            // Scroll to bottom
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        }
-        
-        function setLoading(loading) {
-            isLoading = loading;
-            const loadingDiv = document.getElementById('loading');
-            const sendButton = document.getElementById('sendButton');
-            
-            if (loading) {
-                loadingDiv.classList.add('show');
-                sendButton.disabled = true;
-                sendButton.textContent = 'Sending...';
-            } else {
-                loadingDiv.classList.remove('show');
-                sendButton.disabled = false;
-                sendButton.textContent = 'Send';
-            }
-        }
-        
-        async function clearHistory() {
-            if (confirm('Are you sure you want to clear the chat history?')) {
-                try {
-                    await fetch('/api/clear', { method: 'POST' });
-                    const messagesContainer = document.getElementById('chatMessages');
-                    messagesContainer.innerHTML = `
-                        <div class="message bot">
-                            <div class="message-avatar">🤖</div>
-                            <div class="message-content">
-                                Chat history cleared. How can I help you with the FAR today?
-                            </div>
-                        </div>
-                    `;
-                } catch (error) {
-                    console.error('Failed to clear history:', error);
-                }
-            }
-        }
-        
-        // Load chat history on page load
-        async function loadHistory() {
-            try {
-                const response = await fetch('/api/history');
-                const history = await response.json();
-                
-                const messagesContainer = document.getElementById('chatMessages');
-                
-                // Clear initial message
-                messagesContainer.innerHTML = '';
-                
-                // Add history messages
-                history.forEach(entry => {
-                    addMessage(entry.question, 'user');
-                    addMessage(entry.answer, 'bot');
-                });
-                
-                // If no history, add welcome message
-                if (history.length === 0) {
-                    addMessage(`Hello! I'm your FAR AI assistant. I can help you understand the Federal Acquisition Regulation. 
-                    Ask me questions like:
-                    <br><br>
-                    • "What are the small business requirements?"
-                    <br>
-                    • "How do I submit a bid?"
-                    <br>
-                    • "What are the security requirements?"
-                    <br>
-                    • "Tell me about contract termination procedures"`, 'bot');
-                }
-            } catch (error) {
-                console.error('Failed to load history:', error);
-            }
-        }
-        
-        // Load history when page loads
-        loadHistory();
-    </script>
+      } catch {
+        console.warn("Failed to load history.");
+      }
+    }
+  </script>
 </body>
 </html>
-
-
-
-
-
